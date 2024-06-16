@@ -13,6 +13,7 @@ ASSETS_PATH = os.path.join(OUTPUT_PATH, "assets", "frame0")
 
 def relative_to_assets(path: str) -> str:
     return os.path.join(ASSETS_PATH, path)
+
 def voltar():
     args = [sys.executable, str(OUTPUT_PATH / "encomendas_cadastro_i.py")]
     subprocess.run(args)

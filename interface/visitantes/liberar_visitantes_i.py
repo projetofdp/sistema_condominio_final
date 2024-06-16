@@ -10,64 +10,51 @@ sys.path.append(str(project_path))
 from back.banco_de_dados.funcoes_visitantes import * 
 
 
+
+
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = os.path.join(OUTPUT_PATH, "assets", "frame6")
 
 def relative_to_assets(path: str) -> str:
     return os.path.join(ASSETS_PATH, path)
 
-def obter_informacoes_do_banco_de_dados():
-    conn = sqlite3.connect('condominio.db')
-    cursor = conn.cursor()
-    cursor.execute("""
-        SELECT v.nome_visitante, v.horario1, v.horario2, v.data, v.bloco, v.apartamento, m.nome
-        FROM visitantes v
-        INNER JOIN moradores m ON v.morador_id = m.id
-        ORDER BY v.data ASC, v.horario1 ASC, v.horario2 ASC
-    """)
-    resultados = cursor.fetchall()
-    conn.close()
-    return resultados
+def voltar():
+    args = [sys.executable, str(OUTPUT_PATH / "dashboard_i.py")]
+    subprocess.run(args)
 
-def mover_pessoa1_para_antigos():
-    conn = sqlite3.connect('condominio.db')
-    cursor = conn.cursor()
+def pesquisar():
+    nome = entry_1.get()
+    bloco = entry_2.get()
+    apartamento = entry_3.get()
 
-    # Seleciona os dados da primeira pessoa e do morador relacionado
-    cursor.execute("""
-        SELECT v.id, v.nome_visitante, v.horario1, v.horario2, v.data, v.bloco, v.apartamento, m.id, m.nome
-        FROM visitantes v
-        INNER JOIN moradores m ON v.morador_id = m.id
-        ORDER BY v.data ASC, v.horario1 ASC, v.horario2 ASC
-        LIMIT 1
-    """)
-    pessoa = cursor.fetchone()
+    if nome and bloco and apartamento:
+        dados_visitante = pesquisar_visitante(nome, bloco, apartamento)
 
-    if pessoa:
-        visitante_id, nome_visitante, horario1, horario2, data, bloco, apartamento, morador_id, nome_morador = pessoa
+        if dados_visitante:
+            abrir_pesquisa(dados_visitante)
+            window.destroy()
+        else:
+            messagebox.showinfo("Erro", "Visitante não encontrado.")
+    else:
+        messagebox.showinfo("Erro", "Por favor, preencha todos os campos.")
 
-        # Move os dados para a tabela visitantes_antigos
-        cursor.execute("""
-            INSERT INTO visitantes_antigos (morador_id, nome_visitante, horario1, horario2, data, nome_morador, bloco, apartamento)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        """, (morador_id, nome_visitante, horario1, horario2, data, nome_morador, bloco, apartamento))
 
-        # Remove os dados da primeira pessoa da tabela visitantes
-        cursor.execute("""
-            DELETE FROM visitantes 
-            WHERE id = ?
-        """, (visitante_id,))
+def abrir_pesquisa(dados_visitante):
+    if len(dados_visitante) >= 1:
+        args = [sys.executable, str(OUTPUT_PATH / "liberar_visitantes_pesquisa_i.py"), json.dumps(dados_visitante)]
+        subprocess.run(args)
+        window.destroy()
+    else:
+        messagebox.showerror("Erro", "Dados insuficientes para abrir a edição.")
 
-        conn.commit()
 
-    conn.close()
-
+def button_mover_pessoa_para_antigos():
+    mover_pessoa_para_antigos()
     # Atualiza o canvas com os novos dados
     resultados = obter_informacoes_do_banco_de_dados()
     atualizar_dados_canvas(resultados)
 
 def atualizar_dados_canvas(resultados):
-    # Limpa apenas os elementos dinâmicos do canvas
     for item in canvas.find_withtag("dinamico"):
         canvas.delete(item)
 
@@ -86,7 +73,7 @@ def atualizar_dados_canvas(resultados):
             preencher_pessoa3(nome, hora1, hora2, data, bloco, apto)
 
 def preencher_pessoa1(nome, hora1, hora2, data, bloco, apto):
-    criar_elemetos_pessoa1()
+    criar_elemetos_pessoa1(canvas)
     canvas.create_text(115, 173, anchor="nw", text=nome, fill="#000000", font=("BeVietnamPro MediumItalic", 14 * -1), tags="dinamico")
     canvas.create_text(115, 213, anchor="nw", text=hora1, fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
     canvas.create_text(181, 213, anchor="nw", text=hora2, fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
@@ -95,7 +82,7 @@ def preencher_pessoa1(nome, hora1, hora2, data, bloco, apto):
     canvas.create_text(355, 213, anchor="nw", text=apto, fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
 
 def preencher_pessoa2(nome, hora1, hora2, data, bloco, apto):
-    criar_elemetos_pessoa2()
+    criar_elemetos_pessoa2(canvas)
     canvas.create_text(115, 326, anchor="nw", text=nome, fill="#000000", font=("BeVietnamPro MediumItalic", 14 * -1), tags="dinamico")
     canvas.create_text(115, 366, anchor="nw", text=hora1, fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
     canvas.create_text(181, 366, anchor="nw", text=hora2, fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
@@ -104,7 +91,7 @@ def preencher_pessoa2(nome, hora1, hora2, data, bloco, apto):
     canvas.create_text(355, 366, anchor="nw", text=apto, fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
 
 def preencher_pessoa3(nome, hora1, hora2, data, bloco, apto):
-    criar_elemetos_pessoa3()
+    criar_elemetos_pessoa3(canvas)
     canvas.create_text(115, 479, anchor="nw", text=nome, fill="#000000", font=("BeVietnamPro MediumItalic", 14 * -1), tags="dinamico")
     canvas.create_text(115, 519, anchor="nw", text=hora1, fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
     canvas.create_text(181, 519, anchor="nw", text=hora2, fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
@@ -112,49 +99,7 @@ def preencher_pessoa3(nome, hora1, hora2, data, bloco, apto):
     canvas.create_text(310, 519, anchor="nw", text=bloco, fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
     canvas.create_text(355, 519, anchor="nw", text=apto, fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
 
-def pesquisar():
-    nome = entry_1.get()
-    bloco = entry_2.get()
-    apartamento = entry_3.get()
 
-    if nome and bloco and apartamento:
-        dados_visitante = pesquisar_visitante(nome, bloco, apartamento)
-
-        if dados_visitante:
-            abrir_pesquisa(dados_visitante)
-            window.destroy()
-        else:
-            messagebox.showinfo("Erro", "Visitante não encontrado.")
-    else:
-        messagebox.showinfo("Erro", "Por favor, preencha todos os campos.")
-
-def pesquisar_visitante(nome, bloco, apartamento):
-    conn = sqlite3.connect('condominio.db')
-    cursor = conn.cursor()
-    cursor.execute("""
-        SELECT v.nome_visitante, v.horario1, v.horario2, v.data, v.bloco, v.apartamento, m.nome
-        FROM visitantes v
-        INNER JOIN moradores m ON v.morador_id = m.id
-        WHERE m.nome = ? AND v.bloco = ? AND v.apartamento = ?
-    """, (nome, bloco, apartamento))
-    resultado = cursor.fetchall()
-    conn.close()
-    return resultado
-
-
-def abrir_pesquisa(dados_visitante):
-    if len(dados_visitante) >= 1:
-        args = [sys.executable, str(OUTPUT_PATH / "liberar_visitantes_pesquisa_i.py"), json.dumps(dados_visitante)]
-        subprocess.run(args)
-        window.destroy()
-    else:
-        messagebox.showerror("Erro", "Dados insuficientes para abrir a edição.")
-
-
-
-def voltar():
-    args = [sys.executable, str(OUTPUT_PATH / "dashboard_i.py")]
-    subprocess.run(args)
 
 # Criar a janela principal
 window = Tk()
@@ -166,7 +111,8 @@ window.title("Sistema de Condomínio")
 # Criar o canvas
 canvas = Canvas( window, bg="#FFFFFF", height=680, width=950, bd=0, highlightthickness=0, relief="ridge")
 canvas.place(x=0, y=0)
-def criar_elemetos_pessoa1():
+
+def criar_elemetos_pessoa1(canvas):
     global image_image_3
     image_image_3 = PhotoImage(file=relative_to_assets("image_3.png"))
     image_3 = canvas.create_image(249.0, 213.0, image=image_image_3, tags="dinamico")
@@ -180,13 +126,12 @@ def criar_elemetos_pessoa1():
 
 
 button_image_3 = PhotoImage( file=relative_to_assets("button_3.png"))
-button_3 = Button( image=button_image_3, borderwidth=0, highlightthickness=0, command=mover_pessoa1_para_antigos, relief="flat")
+button_3 = Button( image=button_image_3, borderwidth=0, highlightthickness=0, command=mover_pessoa_para_antigos, relief="flat")
 button_3.place( x=212, y=244, width=69, height=21.327281951904297)
 
 
 
-
-def criar_elemetos_pessoa2():
+def criar_elemetos_pessoa2(canvas):
     global image_image_1
     image_image_1 = PhotoImage( file=relative_to_assets("image_1.png"))
     image_1 = canvas.create_image(249.0,366.0, image=image_image_1 , tags="dinamico")
@@ -199,12 +144,11 @@ def criar_elemetos_pessoa2():
     canvas.create_text( 160.0, 366.0, anchor="nw", text="ás", fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
 
 button_image_1 = PhotoImage( file=relative_to_assets("button_1.png"))
-button_1 = Button( image=button_image_1, borderwidth=0, highlightthickness=0, command=mover_pessoa1_para_antigos, relief="flat")
+button_1 = Button( image=button_image_1, borderwidth=0, highlightthickness=0, command=mover_pessoa_para_antigos, relief="flat")
 button_1.place( x=212.0, y=397.0, width=69.0, height=21.327281951904297)
 
 
-
-def criar_elemetos_pessoa3():
+def criar_elemetos_pessoa3(canvas):
     global image_image_2
     image_image_2 = PhotoImage( file=relative_to_assets("image_2.png"))
     image_2 = canvas.create_image( 249.0, 519.0, image=image_image_2 , tags="dinamico")
@@ -217,12 +161,13 @@ def criar_elemetos_pessoa3():
     canvas.create_text( 160.0, 519.0, anchor="nw", text="ás", fill="#000000", font=("BeVietnamPro Medium", 14 * -1), tags="dinamico")
 
 button_image_2 = PhotoImage( file=relative_to_assets("button_2.png"))
-button_2 = Button( image=button_image_2, borderwidth=0, highlightthickness=0, command=mover_pessoa1_para_antigos, relief="flat")
+button_2 = Button( image=button_image_2, borderwidth=0, highlightthickness=0, command=mover_pessoa_para_antigos, relief="flat")
 button_2.place( x=212.0, y=550.0, width=69.0, height=21.327281951904297)
 
 
+
 # textos diversos
-canvas.create_text(45.0, 66.0, anchor="nw", text="hoje", fill="#8EBC4F",font=("BeVietnamPro SemiBold", 45 * -1))
+canvas.create_text(100.0, 66.0, anchor="nw", text="hoje", fill="#8EBC4F",font=("BeVietnamPro SemiBold", 45 * -1))
 canvas.create_text( 539.0, 66.0, anchor="nw", text="Pesquisa", fill="#8EBC4F", font=("BeVietnamPro Bold", 45 * -1))
 canvas.create_text(724.0, 25.0, anchor="nw", text="Liberar visitantes", fill="#B9B9B9",font=("BeVietnamPro Light", 19 * -1))
 
