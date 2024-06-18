@@ -26,6 +26,7 @@ def voltar():
     subprocess.run(args)
     window.destroy()
 
+
     
 def pesquisar():
     nome = entry_1.get()
@@ -37,7 +38,7 @@ def pesquisar():
 
         if dados_visitante:
             abrir_pesquisa(dados_visitante)
-            window.destroy()
+            # Verifica se a janela ainda existe antes de tentar destruí-la
         else:
             messagebox.showinfo("Erro", "Visitante não encontrado.")
     else:
@@ -46,7 +47,8 @@ def pesquisar():
 
 def abrir_pesquisa(dados_visitante):
     if len(dados_visitante) >= 1:
-        args = [sys.executable, str(OUTPUT_PATH / "liberar_visitantes_pesquisa_i.py"), json.dumps(dados_visitante)]
+        script_path = Path(OUTPUT_PATH, "visitantes", "liberar_visitantes_pesquisa_i.py")
+        args = [sys.executable, str(script_path), json.dumps(dados_visitante)]
         subprocess.run(args)
         window.destroy()
     else:

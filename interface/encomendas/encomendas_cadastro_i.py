@@ -36,7 +36,6 @@ def pesquisar():
 
         if dados_encomenda:
             abrir_pesquisa(dados_encomenda)
-            window.destroy()
         else:
             messagebox.showinfo("Erro", "Morador não encontrado.")
     else:
@@ -49,15 +48,24 @@ def cadastrar():
     data_entrega = entry_7.get()
     porteiro = entry_4.get()
     inserir_encomenda(nome, data_entrega, bloco, apartamento,porteiro)
+    limpar_campos()
 
 def abrir_pesquisa(dados_encomenda):
     print("Comprimento dos dados da encomenda:", len(dados_encomenda))
     if len(dados_encomenda) >= 1 :
-        args = [sys.executable, str(OUTPUT_PATH / "encomendas_pesquisa_I.py"),json.dumps(dados_encomenda)]
+        script_path = Path(OUTPUT_PATH, "encomendas", "encomendas_pesquisa_I.py")
+        args = [sys.executable, str(script_path),json.dumps(dados_encomenda)]
         subprocess.run(args)
         window.destroy()
     else:
         messagebox.showerror("Erro", "Dados insuficientes para abrir a edição.")
+
+def limpar_campos():
+    entry_5.delete(0, 'end')
+    entry_6.delete(0, 'end')
+    entry_8.delete(0, 'end')
+    entry_7.delete(0, 'end')
+    entry_4.delete(0, 'end')
 
 
 window = Tk()

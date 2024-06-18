@@ -18,7 +18,12 @@ def pesquisar_visitante(nome, bloco, apartamento):
     """, (nome, bloco, apartamento))
     resultado = cursor.fetchall()
     conn.close()
+
+    print(f"Consulta SQL executada com parâmetros: nome={nome}, bloco={bloco}, apartamento={apartamento}")
+    print(f"Resultado da consulta: {resultado}")
+
     return resultado
+
 
 def obter_informacoes_do_banco_de_dados():
     conn = sqlite3.connect('condominio.db')

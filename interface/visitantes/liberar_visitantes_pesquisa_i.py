@@ -20,7 +20,7 @@ def relative_to_assets(path: str) -> str:
     return os.path.join(ASSETS_PATH, path)
 
 def voltar():
-    script_path = os.path.join(OUTPUT_PATH, "visitantes", "liberar_visitantes_pesquisa_i.py")
+    script_path = os.path.join(OUTPUT_PATH, "visitantes", "liberar_visitantes_i.py")
     args = [sys.executable, script_path]
     subprocess.run(args)
     window.destroy()
@@ -104,7 +104,7 @@ def criar_elemetos_pessoa1(canvas):
 
 
 button_image_4 = PhotoImage( file=relative_to_assets("button_4.png"))
-button_4 = Button( image=button_image_4, borderwidth=0, highlightthickness=0, command=mover_pessoa1_para_antigos, relief="flat")
+button_4 = Button( image=button_image_4, borderwidth=0, highlightthickness=0, command=mover_pessoa_para_antigos, relief="flat")
 button_4.place( x=184.0, y=227.0, width=69.0, height=21.327281951904297)
 
 def criar_elemetos_pessoa2(canvas):

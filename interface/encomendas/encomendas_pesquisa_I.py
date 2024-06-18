@@ -25,23 +25,22 @@ def voltar():
     window.destroy()
 
 
-def atualizar_dados_canvas(canvas,dados_encomenda):
-    # Limpa apenas os elementos dinâmicos do canvas
+def atualizar_dados_canvas(canvas, dados_encomenda):
     for item in canvas.find_withtag("dinamico"):
         canvas.delete(item)
+    
+    for i, dado in enumerate(dados_encomenda):
         try:
             nome, bloco, apartamento, porteiro, data_entrega, id_ = dado
-        except ValueError:
-                print(f"Formato inesperado de dado na posição {i}: {dado}")
-                continue
-    for i, dado in enumerate(dados_encomenda):
-            nome, bloco, apartamento, porteiro, data_entrega, id_ = dado
             if i == 0:
-                preencher_encomenda1(nome,bloco, apartamento, porteiro, data_entrega, id_)
+                preencher_encomenda1(nome, bloco, apartamento, porteiro, data_entrega, id_)
             elif i == 1:
                 preencher_encomenda2(nome, bloco, apartamento, porteiro, data_entrega, id_)
             elif i == 2:
                 preencher_encomenda3(nome, bloco, apartamento, porteiro, data_entrega, id_)
+        except ValueError:
+            print(f"Formato inesperado de dado na posição {i}: {dado}")
+
 
 
 def preencher_encomenda1(nome, bloco, apartamento, porteiro, data_entrega, id_):
@@ -83,14 +82,14 @@ def retirar_encomenda1():
             "data_entrega": data_entrega,
             "id": id_
         }
-        args = [sys.executable, str(OUTPUT_PATH / "encomendas_retiradas_I.py"), json.dumps(encomenda_data)]
+        script_path = str(OUTPUT_PATH / "encomendas" / "encomendas_retiradas_I.py")
+        args = [sys.executable, script_path, json.dumps(encomenda_data)]
         subprocess.run(args)
         
+        dados_encomenda.remove(encomenda1)
+        atualizar_dados_canvas(canvas, dados_encomenda)
     else:
         messagebox.showerror("Erro", "Dados insuficientes para abrir a edição.")
-
-    dados_encomenda.remove(encomenda1)
-    atualizar_dados_canvas(canvas, dados_encomenda)
 
 window = Tk()
 

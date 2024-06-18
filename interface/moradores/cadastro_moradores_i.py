@@ -40,7 +40,8 @@ def pesquisar():
 
 def abrir_edicao(dados):
     if len(dados) == 7:
-        args = [sys.executable, str(OUTPUT_PATH / "cadastro_moradores_editar_i.py")] + list(map(str, dados))
+        script_path = Path(OUTPUT_PATH, "moradores", "cadastro_moradores_editar_i.py")
+        args = [sys.executable, str(script_path)] + list(map(str, dados))
         subprocess.run(args)
     else:
         messagebox.showerror("Erro", "Dados insuficientes para abrir a edição.")

@@ -36,6 +36,16 @@ def inserir_encomenda(nome, data_entrega, bloco, apartamento, porteiro):
     messagebox.showinfo("Sucesso", "Encomenda inserida com sucesso.")
 
 def pesquisar_encomenda(nome, bloco, apartamento):
+    if not validar_nome(nome):
+        messagebox.showerror("Erro", "Nome inválido. Deve conter apenas letras e até 50 caracteres.")
+        return
+    if not validar_bloco(bloco):
+        messagebox.showerror("Erro", "Bloco inválido. Deve conter até 10 caracteres alfanuméricos.")
+        return
+    if not validar_apartamento(apartamento):
+        messagebox.showerror("Erro", "Apartamento inválido. Deve conter até 4 números.")
+        return
+
     conn = sqlite3.connect('condominio.db')
     cursor = conn.cursor()
     cursor.execute("""
@@ -79,3 +89,18 @@ def inserir_informacoes_encomendas_antigas(nome, apartamento, bloco, data_entreg
     # Fechar a conexão com o banco de dados
     conn.close()
 
+def apagar_dados_outra_tabela(id_):
+    # Conecta ao banco de dados
+    conn = sqlite3.connect('seu_banco_de_dados.db')  # Substitua pelo caminho do seu banco de dados
+    cursor = conn.cursor()
+    
+    try:
+        # Executa a consulta para apagar os dados
+        cursor.execute("DELETE FROM encomenda WHERE id = ?", (id_,))
+        conn.commit()
+        print(f"Dados com ID {id_} apagados com sucesso.")
+    except sqlite3.Error as e:
+        print(f"Erro ao apagar os dados: {e}")
+    finally:
+        # Fecha a conexão com o banco de dados
+        conn.close()

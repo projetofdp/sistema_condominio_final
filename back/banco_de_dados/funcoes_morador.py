@@ -62,6 +62,29 @@ def pesquisar_morador(nome, bloco, apartamento):
     return dados
 
 def editar_morador(nome, cpf, data_nascimento, telefone, bloco, apartamento, placa_carro):
+    if not validar_nome(nome):
+        messagebox.showerror("Erro", "Nome inválido. Deve conter apenas letras e até 50 caracteres.")
+        return
+    if not validar_cpf(cpf):
+        messagebox.showerror("Erro", "CPF inválido. Deve conter exatamente 11 números.")
+        return
+    if not validar_telefone(telefone):
+        messagebox.showerror("Erro", "Telefone inválido. Deve conter exatamente 11 números.")
+        return
+    if not validar_data_nascimento(data_nascimento):
+        messagebox.showerror("Erro", "Data de nascimento inválida. Deve estar no formato DDMMAAAA.")
+        return
+    if not validar_bloco(bloco):
+        messagebox.showerror("Erro", "Bloco inválido. Deve conter até 10 caracteres alfanuméricos.")
+        return
+    if not validar_apartamento(apartamento):
+        messagebox.showerror("Erro", "Apartamento inválido. Deve conter até 4 números.")
+        return
+    if not validar_placa_carro(placa_carro):
+        messagebox.showerror("Erro", "Placa de Carro inválida. Deve conter 7 caracteres alfanuméricos.")
+        return
+    
+
     try:
         # Conectar-se ao banco de dados
         conn = sqlite3.connect("condominio.db")
