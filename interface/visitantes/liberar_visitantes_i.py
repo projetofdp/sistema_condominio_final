@@ -57,7 +57,6 @@ def abrir_pesquisa(dados_visitante):
 
 def button_mover_pessoa_para_antigos():
     mover_pessoa_para_antigos()
-    # Atualiza o canvas com os novos dados
     resultados = obter_informacoes_do_banco_de_dados()
     atualizar_dados_canvas(resultados)
 

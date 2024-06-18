@@ -58,6 +58,7 @@ def deletar_morador_func():
     try:
         resultado = deletar_morador(nome, cpf, bloco, apartamento, placa_carro, telefone, data_nascimento)
         if resultado:
+            limpar_entradas()
             messagebox.showinfo("Sucesso", "Morador deletado com sucesso.")
         else:
             messagebox.showerror("Erro", "Erro ao deletar morador.")
@@ -74,6 +75,19 @@ def salvar_edicao():
     data_nascimento = entry_data_nascimento.get()
     
     editar_morador(nome, cpf, data_nascimento, telefone, bloco, apartamento, placa_carro )
+    limpar_entradas()
+
+
+
+def limpar_entradas():
+    entry_nome.delete(0, 'end')   
+    entry_cpf.delete(0, 'end')
+    entry_bloco.delete(0, 'end')   
+    entry_apartamento.delete(0, 'end')   
+    entry_placa_carro.delete(0, 'end')   
+    entry_telefone.delete(0, 'end')   
+    entry_data_nascimento.delete(0, 'end')   
+ 
 
 window = Tk()
 window.geometry("950x680")
@@ -152,5 +166,3 @@ if len(dados) == 7:
 
 window.resizable(False, False)
 window.mainloop()
-
-

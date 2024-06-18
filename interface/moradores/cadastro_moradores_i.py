@@ -57,12 +57,26 @@ def cadastrar():
     apartamento = entry_6.get()
     placa_carro = entry_5.get()
     inserir_morador(nome, cpf, data_nascimento, telefone, bloco, apartamento, placa_carro)
+    limpar_entradas()
 
 def voltar():
     script_path = os.path.join(OUTPUT_PATH, "dashboard", "dashboard_i.py")
     args = [sys.executable, script_path]
     subprocess.run(args)
     window.destroy()
+
+def limpar_entradas():
+    entry_1.delete(0, 'end')   
+    entry_2.delete(0, 'end')
+    entry_3.delete(0, 'end')   
+    entry_4.delete(0, 'end')   
+    entry_5.delete(0, 'end')   
+    entry_6.delete(0, 'end')   
+    entry_7.delete(0, 'end')   
+    entry_8.delete(0, 'end')
+    entry_9.delete(0, 'end')
+    entry_10.delete(0, 'end')  
+
 
 # Configuração da janela principal
 window = Tk()
