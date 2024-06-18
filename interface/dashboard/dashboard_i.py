@@ -39,7 +39,7 @@ def encomendas():
     window.destroy()
 
 def reservas():
-    script_path = os.path.join(OUTPUT_PATH, "encomendas", "encomendas_cadastro_i.py")
+    script_path = os.path.join(OUTPUT_PATH, "reserva", "reserva_cadastro_i.py")
     args = [sys.executable, script_path]
     subprocess.run(args)
     window.destroy()
@@ -89,7 +89,7 @@ button_5.place( x=217.0, y=450.0, width=167.0, height=167.0)
 
 #reserva condominio
 button_image_1 = PhotoImage( file=relative_to_assets("button_1.png"))
-button_1 = Button( image=button_image_1, borderwidth=0, highlightthickness=0, command=liberar_visitantes, relief="flat")
+button_1 = Button( image=button_image_1, borderwidth=0, highlightthickness=0, command=reservas, relief="flat")
 button_1.place( x=571.0, y=450.0, width=167.0, height=167.0)
 
 window.resizable(False, False)
