@@ -91,7 +91,7 @@ def inserir_informacoes_encomendas_antigas(nome, apartamento, bloco, data_entreg
 
 def apagar_dados_outra_tabela(id_):
     # Conecta ao banco de dados
-    conn = sqlite3.connect('seu_banco_de_dados.db')  # Substitua pelo caminho do seu banco de dados
+    conn = sqlite3.connect('codominio.db')  # Substitua pelo caminho do seu banco de dados
     cursor = conn.cursor()
     
     try:
