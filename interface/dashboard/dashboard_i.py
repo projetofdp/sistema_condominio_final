@@ -11,8 +11,6 @@ project_root = Path(script_dir).parents[0]  # Isto assumindo que 'dashboard' est
 
 # Defina OUTPUT_PATH como a raiz do projeto
 OUTPUT_PATH = project_root
-
-# Caminho para assets
 ASSETS_PATH = os.path.join(script_dir, "assets", "frame3")
 
 
@@ -40,6 +38,13 @@ def encomendas():
     subprocess.run(args)
     window.destroy()
 
+def reservas():
+    script_path = os.path.join(OUTPUT_PATH, "encomendas", "encomendas_cadastro_i.py")
+    args = [sys.executable, script_path]
+    subprocess.run(args)
+    window.destroy()
+
+
 def obter_msg():
     hora_atual = datetime.now().hour
     if 5 <= hora_atual < 12:
@@ -60,7 +65,7 @@ msg = obter_msg()
 canvas = Canvas( window, bg = "#FFFFFF", height = 680, width = 950, bd = 0, highlightthickness = 0, relief = "ridge")
 
 canvas.place(x = 0, y = 0)
-canvas.create_text( 651.0, 70.0, anchor="nw", text=msg, fill="#000000", font=("BeVietnamPro SemiBold", 53 * -1))
+canvas.create_text( 680.0, 70.0, anchor="nw", text=msg, fill="#000000", font=("BeVietnamPro SemiBold", 53 * -1))
 canvas.create_text( 807.0, 50.0, anchor="nw", text="dashboard", fill="#B9B9B9", font=("BeVietnamPro Light", 20 * -1))
 
 #logo 
@@ -75,12 +80,17 @@ button_3.place( x=400.0, y=450.0, width=167.0, height=167.0)
 #cadastro de moradores
 button_image_4 = PhotoImage( file=relative_to_assets("button_4.png"))
 button_4 = Button( image=button_image_4, borderwidth=0, highlightthickness=0, command=cadastro_moradores, relief="flat")
-button_4.place( x=37.0, y=450.0, width=170.0, height=165.1884765625)
+button_4.place( x=37.0, y=450.0, width=167.0, height=167)
 
 #liberar visitantes
 button_image_5 = PhotoImage( file=relative_to_assets("button_5.png"))
 button_5 = Button( image=button_image_5, borderwidth=0, highlightthickness=0, command=liberar_visitantes, relief="flat")
 button_5.place( x=217.0, y=450.0, width=167.0, height=167.0)
+
+#reserva condominio
+button_image_1 = PhotoImage( file=relative_to_assets("button_1.png"))
+button_1 = Button( image=button_image_1, borderwidth=0, highlightthickness=0, command=liberar_visitantes, relief="flat")
+button_1.place( x=571.0, y=450.0, width=167.0, height=167.0)
 
 window.resizable(False, False)
 window.mainloop()

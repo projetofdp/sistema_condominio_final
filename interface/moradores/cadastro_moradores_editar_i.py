@@ -9,12 +9,18 @@ sys.path.append(str(project_path))
 
 from back.banco_de_dados.funcoes_morador import * 
 
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = os.path.join(OUTPUT_PATH, "assets", "frame5")
+script_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = Path(script_dir).parents[0]  # Isto assumindo que 'dashboard' está dentro de 'interface'
+
+# Defina OUTPUT_PATH como a raiz do projeto
+OUTPUT_PATH = project_root
+ASSETS_PATH = os.path.join(script_dir, "assets", "frame5")
 
 def voltar():
-    args = [sys.executable, str(OUTPUT_PATH / "cadastro_moradores_i.py")]
+    script_path = os.path.join(OUTPUT_PATH, "moradores", "cadastro_moradores_i.py")
+    args = [sys.executable, script_path]
     subprocess.run(args)
+    window.destroy()
 
 def relative_to_assets(path: str) -> str:
     return os.path.join(ASSETS_PATH, path)

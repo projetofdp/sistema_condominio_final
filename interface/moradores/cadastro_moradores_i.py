@@ -10,9 +10,12 @@ project_path = Path(__file__).resolve().parent.parent.parent
 sys.path.append(str(project_path))
 
 from back.banco_de_dados.funcoes_morador import * 
+script_dir = os.path.dirname(os.path.abspath(__file__))
+project_root = Path(script_dir).parents[0]  # Isto assumindo que 'dashboard' está dentro de 'interface'
 
-OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = os.path.join(OUTPUT_PATH, "assets", "frame4")
+# Defina OUTPUT_PATH como a raiz do projeto
+OUTPUT_PATH = project_root
+ASSETS_PATH = os.path.join(script_dir, "assets", "frame4")
 
 
 def relative_to_assets(path: str) -> str:
@@ -55,8 +58,10 @@ def cadastrar():
     inserir_morador(nome, cpf, data_nascimento, telefone, bloco, apartamento, placa_carro)
 
 def voltar():
-    args = [sys.executable, str(OUTPUT_PATH / "dashboard_i.py")]
+    script_path = os.path.join(OUTPUT_PATH, "dashboard", "dashboard_i.py")
+    args = [sys.executable, script_path]
     subprocess.run(args)
+    window.destroy()
 
 # Configuração da janela principal
 window = Tk()
